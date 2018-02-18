@@ -19,10 +19,14 @@ class SeoExtensionTest extends TestCase
     public function testHtmlAttributes()
     {
         $page = $this->createMock('Sonata\SeoBundle\Seo\SeoPageInterface');
-        $page->expects($this->once())->method('getHtmlAttributes')->will($this->returnValue([
-            'xmlns' => 'http://www.w3.org/1999/xhtml',
-            'xmlns:og' => 'http://opengraphprotocol.org/schema/',
-        ]));
+        $page->expects($this->once())->method('getHtmlAttributes')->will(
+            $this->returnValue(
+                [
+                    'xmlns' => 'http://www.w3.org/1999/xhtml',
+                    'xmlns:og' => 'http://opengraphprotocol.org/schema/',
+                ]
+            )
+        );
 
         $extension = new SeoExtension($page, 'UTF-8');
 
@@ -53,13 +57,17 @@ class SeoExtensionTest extends TestCase
     {
         $page = $this->createMock('Sonata\SeoBundle\Seo\SeoPageInterface');
         $page->expects($this->once())->method('getTitle')->will($this->returnValue('pięć głów zatkniętych na pal'));
-        $page->expects($this->once())->method('getMetas')->will($this->returnValue([
-            'http-equiv' => [],
-            'name' => ['foo' => ['pięć głów zatkniętych na pal', []]],
-            'schema' => [],
-            'charset' => [],
-            'property' => [],
-        ]));
+        $page->expects($this->once())->method('getMetas')->will(
+            $this->returnValue(
+                [
+                    'http-equiv' => [],
+                    'name' => ['foo' => ['pięć głów zatkniętych na pal', []]],
+                    'schema' => [],
+                    'charset' => [],
+                    'property' => [],
+                ]
+            )
+        );
 
         $extension = new SeoExtension($page, 'UTF-8');
 
@@ -71,13 +79,17 @@ class SeoExtensionTest extends TestCase
     public function testMetadatas()
     {
         $page = $this->createMock('Sonata\SeoBundle\Seo\SeoPageInterface');
-        $page->expects($this->once())->method('getMetas')->will($this->returnValue([
-            'http-equiv' => [],
-            'name' => ['foo' => ['bar "\'"', []]],
-            'schema' => [],
-            'charset' => ['UTF-8' => ['', []]],
-            'property' => [],
-        ]));
+        $page->expects($this->once())->method('getMetas')->will(
+            $this->returnValue(
+                [
+                    'http-equiv' => [],
+                    'name' => ['foo' => ['bar "\'"', []]],
+                    'schema' => [],
+                    'charset' => ['UTF-8' => ['', []]],
+                    'property' => [],
+                ]
+            )
+        );
 
         $extension = new SeoExtension($page, 'UTF-8');
 
@@ -105,9 +117,13 @@ class SeoExtensionTest extends TestCase
     public function testLangAlternates()
     {
         $page = $this->createMock('Sonata\SeoBundle\Seo\SeoPageInterface');
-        $page->expects($this->once())->method('getLangAlternates')->will($this->returnValue([
+        $page->expects($this->once())->method('getLangAlternates')->will(
+            $this->returnValue(
+                [
                     'http://example.com/' => 'x-default',
-                ]));
+                ]
+            )
+        );
 
         $extension = new SeoExtension($page, 'UTF-8');
 
@@ -117,12 +133,40 @@ class SeoExtensionTest extends TestCase
     public function testOEmbedLinks()
     {
         $page = $this->createMock('Sonata\SeoBundle\Seo\SeoPageInterface');
-        $page->expects($this->once())->method('getOembedLinks')->will($this->returnValue([
-            'Foo' => 'http://example.com/',
-        ]));
+        $page->expects($this->once())->method('getOembedLinks')->will(
+            $this->returnValue(
+                [
+                    'Foo' => 'http://example.com/',
+                ]
+            )
+        );
 
         $extension = new SeoExtension($page, 'UTF-8');
 
         $this->assertEquals("<link rel=\"alternate\" type=\"application/json+oembed\" href=\"http://example.com/\" title=\"Foo\" />\n", $extension->getOembedLinks());
+    }
+
+    public function testStructuredData()
+    {
+        $page = $this->createMock('Sonata\SeoBundle\Seo\SeoPageInterface');
+        $page->expects($this->any())->method('getStructuredData')->will($this->returnValue(file_get_contents(__DIR__ . '/../../Fixtures/structured_data.jsonld')));
+
+        $extension = new SeoExtension($page, 'UTF-8');
+
+        $this->assertEquals(
+'<script type="application/ld+json">{
+  "@context": "http://schema.org",
+  "@type": "Organization",
+  "url": "http://www.example.com",
+  "name": "Unlimited Ball Bearings Corp.",
+  "contactPoint": {
+    "@type": "ContactPoint",
+    "telephone": "+1-401-555-1212",
+    "contactType": "Customer service"
+  }
+}</script>
+',
+            $extension->getStructuredData()
+        );
     }
 }

@@ -57,6 +57,13 @@ class SeoPage implements SeoPageInterface
     protected $oembedLinks;
 
     /**
+     * A JSON-LD string, which can be served as structured data.
+     *
+     * @var string
+     */
+    protected $structuredData;
+
+    /**
      * @param string $title
      */
     public function __construct($title = '')
@@ -75,6 +82,7 @@ class SeoPage implements SeoPageInterface
         $this->separator = ' ';
         $this->langAlternates = [];
         $this->oembedLinks = [];
+        $this->structuredData = '';
     }
 
     /**
@@ -397,5 +405,21 @@ class SeoPage implements SeoPageInterface
         }
 
         return $meta;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getStructuredData()
+    {
+        return $this->structuredData;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function setStructuredData($structuredData)
+    {
+        $this->structuredData = $structuredData;
     }
 }
