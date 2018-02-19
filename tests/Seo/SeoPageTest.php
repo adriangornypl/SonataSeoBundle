@@ -164,4 +164,12 @@ class SeoPageTest extends TestCase
 
         $this->assertInstanceOf('Sonata\SeoBundle\Seo\SeoPage', $page->setSeparator('-'));
     }
+
+    public function testSetStructuredData()
+    {
+        $page = new SeoPage();
+        $structuredData = file_get_contents(__DIR__ . '/../Fixtures/structured_data.jsonld');
+
+        $this->assertInstanceOf('Sonata\SeoBundle\Seo\SeoPage', $page->setStructuredData($structuredData));
+    }
 }
