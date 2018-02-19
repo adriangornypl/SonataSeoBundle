@@ -40,6 +40,9 @@ However, it is possible to alter these values at runtime:
 
     $seoPage = $this->container->get('sonata.seo.page');
 
+    // Create JSON-LD formated information to use as structured data
+    $structuredDataAsJsonLD = $this->evaluateStructuredData($post);
+
     $seoPage
         ->setTitle($post->getTitle())
         ->addMeta('name', 'description', $post->getAbstract())
@@ -49,6 +52,7 @@ However, it is possible to alter these values at runtime:
             'permalink'  => $this->getBlog()->getPermalinkGenerator()->generate($post, true)
         ), true))
         ->addMeta('property', 'og:description', $post->getAbstract())
+        ->setStructuredData($structuredDataAsJsonLD)
     ;
 
 
@@ -63,3 +67,4 @@ These values can be used inside a twig template.
             {{ sonata_seo_metadatas() }}
             {{ sonata_seo_link_canonical() }}
             {{ sonata_seo_lang_alternates() }}
+            {{ sonata_seo_structured_data() }}
