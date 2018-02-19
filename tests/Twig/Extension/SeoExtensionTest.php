@@ -145,29 +145,4 @@ class SeoExtensionTest extends TestCase
 
         $this->assertEquals("<link rel=\"alternate\" type=\"application/json+oembed\" href=\"http://example.com/\" title=\"Foo\" />\n", $extension->getOembedLinks());
     }
-
-    public function testStructuredData()
-    {
-        $page = $this->createMock('Sonata\SeoBundle\Seo\SeoPageInterface');
-        $page->expects($this->any())->method('getStructuredData')->will($this->returnValue(file_get_contents(__DIR__.'/../../Fixtures/structured_data.jsonld')));
-
-        $extension = new SeoExtension($page, 'UTF-8');
-
-        $this->assertEquals(
-'<script type="application/ld+json">{
-  "@context": "http://schema.org",
-  "@type": "Organization",
-  "url": "http://www.example.com",
-  "name": "Unlimited Ball Bearings Corp.",
-  "contactPoint": {
-    "@type": "ContactPoint",
-    "telephone": "+1-401-555-1212",
-    "contactType": "Customer service"
-  }
-}
-</script>
-',
-            $extension->getStructuredData()
-        );
-    }
 }
