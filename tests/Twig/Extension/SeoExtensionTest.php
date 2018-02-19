@@ -164,7 +164,8 @@ class SeoExtensionTest extends TestCase
     "telephone": "+1-401-555-1212",
     "contactType": "Customer service"
   }
-}</script>
+}
+</script>
 ',
             $extension->getStructuredData()
         );
