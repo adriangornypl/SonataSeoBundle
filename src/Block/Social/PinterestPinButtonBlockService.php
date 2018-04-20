@@ -15,7 +15,12 @@ use Sonata\AdminBundle\Form\FormMapper;
 use Sonata\BlockBundle\Block\BlockContextInterface;
 use Sonata\BlockBundle\Block\Service\AbstractAdminBlockService;
 use Sonata\BlockBundle\Model\BlockInterface;
+use Sonata\CoreBundle\Form\Type\ImmutableArrayType;
 use Sonata\CoreBundle\Model\Metadata;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\IntegerType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\Form\Extension\Core\Type\UrlType;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
@@ -33,14 +38,14 @@ class PinterestPinButtonBlockService extends AbstractAdminBlockService
      */
     public function configureSettings(OptionsResolver $resolver)
     {
-        $resolver->setDefaults(array(
-            'template' => 'SonataSeoBundle:Block:block_pinterest_pin_button.html.twig',
+        $resolver->setDefaults([
+            'template' => '@SonataSeo/Block/block_pinterest_pin_button.html.twig',
             'size' => null,
             'shape' => null,
             'url' => null,
             'image' => null,
             'description' => null,
-        ));
+        ]);
     }
 
     /**
@@ -48,35 +53,35 @@ class PinterestPinButtonBlockService extends AbstractAdminBlockService
      */
     public function buildEditForm(FormMapper $formMapper, BlockInterface $block)
     {
-        $formMapper->add('settings', 'sonata_type_immutable_array', array(
-            'keys' => array(
-                array('url', 'url', array(
+        $formMapper->add('settings', ImmutableArrayType::class, [
+            'keys' => [
+                ['url', UrlType::class, [
                     'required' => false,
                     'label' => 'form.label_url',
-                )),
-                array('image', 'text', array(
+                ]],
+                ['image', TextType::class, [
                     'required' => false,
                     'label' => 'form.label_image',
-                )),
-                array('description', 'text', array(
+                ]],
+                ['description', TextType::class, [
                     'required' => false,
                     'label' => 'form.label_description',
-                )),
-                array('size', 'integer', array(
+                ]],
+                ['size', IntegerType::class, [
                     'required' => false,
                     'label' => 'form.label_size',
-                )),
-                array('shape', 'choice', array(
+                ]],
+                ['shape', ChoiceType::class, [
                     'required' => false,
-                    'choices' => array(
+                    'choices' => [
                         'rectangular' => 'form.label_shape_rectangular',
                         'round' => 'form.label_shape_round',
-                    ),
+                    ],
                     'label' => 'form.label_shape',
-                )),
-            ),
+                ]],
+            ],
             'translation_domain' => 'SonataSeoBundle',
-        ));
+        ]);
     }
 
     /**
@@ -87,10 +92,10 @@ class PinterestPinButtonBlockService extends AbstractAdminBlockService
         $block = $blockContext->getBlock();
         $settings = array_merge($blockContext->getSettings(), $block->getSettings());
 
-        return $this->renderResponse($blockContext->getTemplate(), array(
+        return $this->renderResponse($blockContext->getTemplate(), [
             'block' => $blockContext->getBlock(),
             'settings' => $settings,
-        ), $response);
+        ], $response);
     }
 
     /**
@@ -98,8 +103,8 @@ class PinterestPinButtonBlockService extends AbstractAdminBlockService
      */
     public function getBlockMetadata($code = null)
     {
-        return new Metadata($this->getName(), (!is_null($code) ? $code : $this->getName()), false, 'SonataSeoBundle', array(
+        return new Metadata($this->getName(), (null !== $code ? $code : $this->getName()), false, 'SonataSeoBundle', [
             'class' => 'fa fa-pinterest-p',
-        ));
+        ]);
     }
 }

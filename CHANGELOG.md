@@ -2,6 +2,36 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## [2.5.0](https://github.com/sonata-project/SonataSeoBundle/compare/2.4.0...2.5.0) - 2018-01-07
+### Fixed
+- It is now allowed to install Symfony 4
+
+### Changed
+- make services explicit public
+- Changed default title to `Project name`
+
+## [2.4.0](https://github.com/sonata-project/SonataSeoBundle/compare/2.3.0...2.4.0) - 2017-11-30
+### Added
+- Russian translations
+
+### Changed
+- do not use deprecated array for block menu service
+
+### Removed
+- Removed BC layer for old symfony versions
+- Support for `^3.0` and `^3.1` versions of `framework-bundle` and `options-resolver`.
+
+## [2.3.0](https://github.com/sonata-project/SonataSeoBundle/compare/2.2.1...2.3.0) - 2017-10-22
+### Changed
+- moved `sonata-project/block-bundle` back to require-dev
+
+### Removed
+- Support for old versions of PHP and Symfony.
+
+## [2.2.1](https://github.com/sonata-project/SonataSeoBundle/compare/2.2.0...2.2.1) - 2017-10-22
+### Fixed
+- Pass the right option for showing form help in twitter embedded block
+
 ## [2.2.0](https://github.com/sonata-project/SonataSeoBundle/compare/2.1.0...2.2.0) - 2017-06-14
 ### Changed
 - Allow Twig ^2.0

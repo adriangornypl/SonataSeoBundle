@@ -13,7 +13,11 @@ namespace Sonata\SeoBundle\Block\Social;
 
 use Sonata\AdminBundle\Form\FormMapper;
 use Sonata\BlockBundle\Model\BlockInterface;
+use Sonata\CoreBundle\Form\Type\ImmutableArrayType;
 use Sonata\CoreBundle\Model\Metadata;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
@@ -30,15 +34,15 @@ class TwitterMentionButtonBlockService extends BaseTwitterButtonBlockService
      */
     public function configureSettings(OptionsResolver $resolver)
     {
-        $resolver->setDefaults(array(
-            'template' => 'SonataSeoBundle:Block:block_twitter_mention_button.html.twig',
+        $resolver->setDefaults([
+            'template' => '@SonataSeo/Block/block_twitter_mention_button.html.twig',
             'user' => null,
             'text' => null,
             'recommend' => null,
             'large_button' => false,
             'opt_out' => false,
             'language' => $this->languageList['en'],
-        ));
+        ]);
     }
 
     /**
@@ -46,36 +50,36 @@ class TwitterMentionButtonBlockService extends BaseTwitterButtonBlockService
      */
     public function buildEditForm(FormMapper $formMapper, BlockInterface $block)
     {
-        $formMapper->add('settings', 'sonata_type_immutable_array', array(
-            'keys' => array(
-                array('user', 'text', array(
+        $formMapper->add('settings', ImmutableArrayType::class, [
+            'keys' => [
+                ['user', TextType::class, [
                     'required' => true,
                     'label' => 'form.label_user',
-                )),
-                array('text', 'text', array(
+                ]],
+                ['text', TextType::class, [
                     'required' => false,
                     'label' => 'form.label_text',
-                )),
-                array('recommend', 'text', array(
+                ]],
+                ['recommend', TextType::class, [
                     'required' => false,
                     'label' => 'form.label_recommend',
-                )),
-                array('large_button', 'checkbox', array(
+                ]],
+                ['large_button', CheckboxType::class, [
                     'required' => false,
                     'label' => 'form.label_large_button',
-                )),
-                array('opt_out', 'checkbox', array(
+                ]],
+                ['opt_out', CheckboxType::class, [
                     'required' => false,
                     'label' => 'form.label_opt_out',
-                )),
-                array('language', 'choice', array(
+                ]],
+                ['language', ChoiceType::class, [
                     'required' => true,
                     'choices' => $this->languageList,
                     'label' => 'form.label_language',
-                )),
-            ),
+                ]],
+            ],
             'translation_domain' => 'SonataSeoBundle',
-        ));
+        ]);
     }
 
     /**
@@ -83,8 +87,8 @@ class TwitterMentionButtonBlockService extends BaseTwitterButtonBlockService
      */
     public function getBlockMetadata($code = null)
     {
-        return new Metadata($this->getName(), (!is_null($code) ? $code : $this->getName()), false, 'SonataSeoBundle', array(
+        return new Metadata($this->getName(), (null !== $code ? $code : $this->getName()), false, 'SonataSeoBundle', [
             'class' => 'fa fa-twitter',
-        ));
+        ]);
     }
 }

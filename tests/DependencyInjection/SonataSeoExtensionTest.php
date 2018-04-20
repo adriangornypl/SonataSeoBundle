@@ -11,8 +11,8 @@
 
 namespace Sonata\SeoBundle\Tests\DependencyInjection;
 
+use PHPUnit\Framework\TestCase;
 use Sonata\SeoBundle\DependencyInjection\SonataSeoExtension;
-use Sonata\SeoBundle\Tests\Helpers\PHPUnit_Framework_TestCase;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 
 /**
@@ -20,7 +20,7 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
  *
  * @author Vincent Tommasi <tommasi.v@gmail.com>
  */
-class SonataSeoExtensionTest extends PHPUnit_Framework_TestCase
+class SonataSeoExtensionTest extends TestCase
 {
     /**
      * Tests the loading of blocks.xml file.
@@ -28,19 +28,19 @@ class SonataSeoExtensionTest extends PHPUnit_Framework_TestCase
     public function testBlocksLoading()
     {
         $container = new ContainerBuilder();
-        $container->setParameter('kernel.bundles', array(
+        $container->setParameter('kernel.bundles', [
             'SonataBlockBundle' => 'Sonata\BlockBundle\SonataBlockBundle',
             'KnpMenuBundle' => 'Knp\Bundle\MenuBundle\KnpMenuBundle',
-        ));
+        ]);
 
         $extension = new SonataSeoExtension();
-        $extension->load(array(array()), $container);
+        $extension->load([[]], $container);
 
         $this->assertTrue($container->hasDefinition('sonata.seo.block.breadcrumb.homepage'));
 
         $container = new ContainerBuilder();
-        $container->setParameter('kernel.bundles', array());
-        $extension->load(array(array()), $container);
+        $container->setParameter('kernel.bundles', []);
+        $extension->load([[]], $container);
 
         $this->assertFalse($container->hasDefinition('sonata.seo.block.breadcrumb.homepage'));
     }

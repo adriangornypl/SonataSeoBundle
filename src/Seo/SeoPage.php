@@ -14,7 +14,7 @@ namespace Sonata\SeoBundle\Seo;
 /**
  * http://en.wikipedia.org/wiki/Meta_element.
  */
-class SeoPage implements SeoPageInterface
+class SeoPage implements SeoPageInterface, StructuredDataAwarePage
 {
     /**
      * @var string
@@ -57,24 +57,32 @@ class SeoPage implements SeoPageInterface
     protected $oembedLinks;
 
     /**
+     * A JSON-LD string, which can be served as structured data.
+     *
+     * @var string
+     */
+    private $structuredData;
+
+    /**
      * @param string $title
      */
     public function __construct($title = '')
     {
         $this->title = $title;
-        $this->metas = array(
-            'http-equiv' => array(),
-            'name' => array(),
-            'schema' => array(),
-            'charset' => array(),
-            'property' => array(),
-        );
+        $this->metas = [
+            'http-equiv' => [],
+            'name' => [],
+            'schema' => [],
+            'charset' => [],
+            'property' => [],
+        ];
 
-        $this->headAttributes = array();
+        $this->headAttributes = [];
         $this->linkCanonical = '';
         $this->separator = ' ';
-        $this->langAlternates = array();
-        $this->oembedLinks = array();
+        $this->langAlternates = [];
+        $this->oembedLinks = [];
+        $this->structuredData = '';
     }
 
     /**
@@ -116,13 +124,13 @@ class SeoPage implements SeoPageInterface
     /**
      * {@inheritdoc}
      */
-    public function addMeta($type, $name, $content, array $extras = array())
+    public function addMeta($type, $name, $content, array $extras = [])
     {
         if (!isset($this->metas[$type])) {
-            $this->metas[$type] = array();
+            $this->metas[$type] = [];
         }
 
-        $this->metas[$type][$name] = array($content, $extras);
+        $this->metas[$type][$name] = [$content, $extras];
 
         return $this;
     }
@@ -156,7 +164,7 @@ class SeoPage implements SeoPageInterface
      */
     public function setMetas(array $metadatas)
     {
-        $this->metas = array();
+        $this->metas = [];
 
         foreach ($metadatas as $type => $metas) {
             if (!is_array($metas)) {
@@ -385,6 +393,18 @@ class SeoPage implements SeoPageInterface
         return $this->oembedLinks;
     }
 
+    public function getStructuredData()
+    {
+        return $this->structuredData;
+    }
+
+    public function setStructuredData($structuredData)
+    {
+        $this->structuredData = $structuredData;
+
+        return $this;
+    }
+
     /**
      * @param mixed $meta
      *
@@ -393,7 +413,7 @@ class SeoPage implements SeoPageInterface
     private function normalize($meta)
     {
         if (is_string($meta)) {
-            return array($meta, array());
+            return [$meta, []];
         }
 
         return $meta;

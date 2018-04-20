@@ -25,7 +25,7 @@ class BreadcrumbListener
     /**
      * @var array
      */
-    protected $blockServices = array();
+    protected $blockServices = [];
 
     /**
      * Add a renderer to the status services list.
@@ -47,7 +47,7 @@ class BreadcrumbListener
     {
         $context = $event->getSetting('context', null);
 
-        if ($context == null) {
+        if (null == $context) {
             return;
         }
 

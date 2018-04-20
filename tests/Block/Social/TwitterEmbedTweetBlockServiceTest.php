@@ -22,15 +22,15 @@ class TwitterEmbedTweetBlockServiceTest extends AbstractBlockServiceTestCase
 {
     public function testBuildUri()
     {
-        $settings = array(
+        $settings = [
             'tweet' => 'tweeeeeeeet',
             'foo' => 'bar',
             'align' => 'bar',
-        );
+        ];
 
         $expected = sprintf('%s?%s', TwitterEmbedTweetBlockService::TWITTER_OEMBED_URI, 'align=bar&url=tweeeeeeeet');
 
-        $blockService = new TwitterEmbedTweetBSTest('', $this->getMock('Symfony\Bundle\FrameworkBundle\Templating\EngineInterface'));
+        $blockService = new TwitterEmbedTweetBSTest('', $this->createMock('Symfony\Bundle\FrameworkBundle\Templating\EngineInterface'));
         $this->assertEquals($expected, $blockService->publicBuildUri(true, $settings));
 
         $expected = sprintf('%s?%s', TwitterEmbedTweetBlockService::TWITTER_OEMBED_URI, 'align=bar&id=tweeeeeeeet');

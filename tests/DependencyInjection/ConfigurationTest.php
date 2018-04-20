@@ -11,16 +11,16 @@
 
 namespace Sonata\SeoBundle\Tests\DependencyInjection;
 
+use PHPUnit\Framework\TestCase;
 use Sonata\SeoBundle\DependencyInjection\Configuration;
-use Sonata\SeoBundle\Tests\Helpers\PHPUnit_Framework_TestCase;
 use Symfony\Component\Config\Definition\Processor;
 use Symfony\Component\Yaml\Yaml;
 
-class ConfigurationTest extends PHPUnit_Framework_TestCase
+class ConfigurationTest extends TestCase
 {
     public function testDefaultConfiguration()
     {
-        $config = $this->processConfiguration(array(array()));
+        $config = $this->processConfiguration([[]]);
 
         $expected = $this->getDefaultConfiguration();
 
@@ -29,18 +29,18 @@ class ConfigurationTest extends PHPUnit_Framework_TestCase
 
     public function testKeysAreNotNormalized()
     {
-        $values = array(
-            'page' => array(
-                'head' => array('data-example' => 'abc-123'),
-                'metas' => array(
-                    'http-equiv' => array(
+        $values = [
+            'page' => [
+                'head' => ['data-example' => 'abc-123'],
+                'metas' => [
+                    'http-equiv' => [
                         'Content-Type' => 'text/html; charset=utf-8',
-                    ),
-                ),
-            ),
-        );
+                    ],
+                ],
+            ],
+        ];
 
-        $config = $this->processConfiguration(array($values));
+        $config = $this->processConfiguration([$values]);
 
         $expected = array_merge_recursive(
             $this->getDefaultConfiguration(),
@@ -52,9 +52,15 @@ class ConfigurationTest extends PHPUnit_Framework_TestCase
 
     public function testWithYamlConfig()
     {
-        $values = Yaml::parse(file_get_contents(__DIR__.'/data/config.yml'), true);
+        $values = Yaml::parse(
+            file_get_contents(__DIR__.'/data/config.yml'),
+            // NEXT_MAJOR: use constant when dropping Symfony < 3.1
+            defined('Symfony\Component\Yaml\Yaml::PARSE_EXCEPTION_ON_INVALID_TYPE') ?
+            Yaml::PARSE_EXCEPTION_ON_INVALID_TYPE :
+            true
+        );
 
-        $config = $this->processConfiguration(array($values));
+        $config = $this->processConfiguration([$values]);
 
         $expected = array_merge_recursive(
             $this->getDefaultConfiguration(),
@@ -68,20 +74,20 @@ class ConfigurationTest extends PHPUnit_Framework_TestCase
 
     private function getDefaultConfiguration()
     {
-        return array(
+        return [
             'encoding' => 'UTF-8',
-            'page' => array(
+            'page' => [
                 'default' => 'sonata.seo.page.default',
-                'head' => array(),
-                'metas' => array(),
+                'head' => [],
+                'metas' => [],
                 'separator' => ' - ',
-                'title' => 'Sonata Project',
-            ),
-            'sitemap' => array(
-                'doctrine_orm' => array(),
-                'services' => array(),
-            ),
-        );
+                'title' => 'Project name',
+            ],
+            'sitemap' => [
+                'doctrine_orm' => [],
+                'services' => [],
+            ],
+        ];
     }
 
     private function processConfiguration(array $configs)

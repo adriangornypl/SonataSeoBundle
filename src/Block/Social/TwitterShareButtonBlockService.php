@@ -13,7 +13,12 @@ namespace Sonata\SeoBundle\Block\Social;
 
 use Sonata\AdminBundle\Form\FormMapper;
 use Sonata\BlockBundle\Model\BlockInterface;
+use Sonata\CoreBundle\Form\Type\ImmutableArrayType;
 use Sonata\CoreBundle\Model\Metadata;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\Form\Extension\Core\Type\UrlType;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
@@ -30,8 +35,8 @@ class TwitterShareButtonBlockService extends BaseTwitterButtonBlockService
      */
     public function configureSettings(OptionsResolver $resolver)
     {
-        $resolver->setDefaults(array(
-            'template' => 'SonataSeoBundle:Block:block_twitter_share_button.html.twig',
+        $resolver->setDefaults([
+            'template' => '@SonataSeo/Block/block_twitter_share_button.html.twig',
             'url' => null,
             'text' => null,
             'show_count' => true,
@@ -41,7 +46,7 @@ class TwitterShareButtonBlockService extends BaseTwitterButtonBlockService
             'large_button' => false,
             'opt_out' => false,
             'language' => $this->languageList['en'],
-        ));
+        ]);
     }
 
     /**
@@ -49,48 +54,48 @@ class TwitterShareButtonBlockService extends BaseTwitterButtonBlockService
      */
     public function buildEditForm(FormMapper $formMapper, BlockInterface $block)
     {
-        $formMapper->add('settings', 'sonata_type_immutable_array', array(
-            'keys' => array(
-                array('url', 'url', array(
+        $formMapper->add('settings', ImmutableArrayType::class, [
+            'keys' => [
+                ['url', UrlType::class, [
                     'required' => false,
                     'label' => 'form.label_url',
-                )),
-                array('text', 'text', array(
+                ]],
+                ['text', TextType::class, [
                     'required' => false,
                     'label' => 'form.label_text',
-                )),
-                array('show_count', 'checkbox', array(
+                ]],
+                ['show_count', CheckboxType::class, [
                     'required' => false,
                     'label' => 'form.label_show_count',
-                )),
-                array('via', 'text', array(
+                ]],
+                ['via', TextType::class, [
                     'required' => false,
                     'label' => 'form.label_via',
-                )),
-                array('recommend', 'text', array(
+                ]],
+                ['recommend', TextType::class, [
                     'required' => false,
                     'label' => 'form.label_recommend',
-                )),
-                array('hashtag', 'text', array(
+                ]],
+                ['hashtag', TextType::class, [
                     'required' => false,
                     'label' => 'form.label_hashtag',
-                )),
-                array('large_button', 'checkbox', array(
+                ]],
+                ['large_button', CheckboxType::class, [
                     'required' => false,
                     'label' => 'form.label_large_button',
-                )),
-                array('opt_out', 'checkbox', array(
+                ]],
+                ['opt_out', CheckboxType::class, [
                     'required' => false,
                     'label' => 'form.label_opt_out',
-                )),
-                array('language', 'choice', array(
+                ]],
+                ['language', ChoiceType::class, [
                     'required' => true,
                     'choices' => $this->languageList,
                     'label' => 'form.label_language',
-                )),
-            ),
+                ]],
+            ],
             'translation_domain' => 'SonataSeoBundle',
-        ));
+        ]);
     }
 
     /**
@@ -98,8 +103,8 @@ class TwitterShareButtonBlockService extends BaseTwitterButtonBlockService
      */
     public function getBlockMetadata($code = null)
     {
-        return new Metadata($this->getName(), (!is_null($code) ? $code : $this->getName()), false, 'SonataSeoBundle', array(
+        return new Metadata($this->getName(), (null !== $code ? $code : $this->getName()), false, 'SonataSeoBundle', [
             'class' => 'fa fa-twitter',
-        ));
+        ]);
     }
 }

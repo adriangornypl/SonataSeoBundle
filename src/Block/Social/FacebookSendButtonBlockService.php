@@ -13,7 +13,11 @@ namespace Sonata\SeoBundle\Block\Social;
 
 use Sonata\AdminBundle\Form\FormMapper;
 use Sonata\BlockBundle\Model\BlockInterface;
+use Sonata\CoreBundle\Form\Type\ImmutableArrayType;
 use Sonata\CoreBundle\Model\Metadata;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\IntegerType;
+use Symfony\Component\Form\Extension\Core\Type\UrlType;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
@@ -30,13 +34,13 @@ class FacebookSendButtonBlockService extends BaseFacebookSocialPluginsBlockServi
      */
     public function configureSettings(OptionsResolver $resolver)
     {
-        $resolver->setDefaults(array(
-            'template' => 'SonataSeoBundle:Block:block_facebook_send_button.html.twig',
+        $resolver->setDefaults([
+            'template' => '@SonataSeo/Block/block_facebook_send_button.html.twig',
             'url' => null,
             'width' => null,
             'height' => null,
             'colorscheme' => $this->colorschemeList['light'],
-        ));
+        ]);
     }
 
     /**
@@ -44,28 +48,28 @@ class FacebookSendButtonBlockService extends BaseFacebookSocialPluginsBlockServi
      */
     public function buildEditForm(FormMapper $formMapper, BlockInterface $block)
     {
-        $formMapper->add('settings', 'sonata_type_immutable_array', array(
-            'keys' => array(
-                array('url', 'url', array(
+        $formMapper->add('settings', ImmutableArrayType::class, [
+            'keys' => [
+                ['url', UrlType::class, [
                     'required' => false,
                     'label' => 'form.label_url',
-                )),
-                array('width', 'integer', array(
+                ]],
+                ['width', IntegerType::class, [
                     'required' => false,
                     'label' => 'form.label_width',
-                )),
-                array('height', 'integer', array(
+                ]],
+                ['height', IntegerType::class, [
                     'required' => false,
                     'label' => 'form.label_height',
-                )),
-                array('colorscheme', 'choice', array(
+                ]],
+                ['colorscheme', ChoiceType::class, [
                     'required' => true,
                     'choices' => $this->colorschemeList,
                     'label' => 'form.label_colorscheme',
-                )),
-            ),
+                ]],
+            ],
             'translation_domain' => 'SonataSeoBundle',
-        ));
+        ]);
     }
 
     /**
@@ -73,8 +77,8 @@ class FacebookSendButtonBlockService extends BaseFacebookSocialPluginsBlockServi
      */
     public function getBlockMetadata($code = null)
     {
-        return new Metadata($this->getName(), (!is_null($code) ? $code : $this->getName()), false, 'SonataSeoBundle', array(
+        return new Metadata($this->getName(), (null !== $code ? $code : $this->getName()), false, 'SonataSeoBundle', [
             'class' => 'fa fa-facebook-official',
-        ));
+        ]);
     }
 }
